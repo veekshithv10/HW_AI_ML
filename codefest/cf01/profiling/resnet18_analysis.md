@@ -1,3 +1,4 @@
+**Baseline Configuration:** Profiled using a standard CPU with an input tensor shape of (1, 3, 224, 224) (Batch Size: 1).
 | Layer Name | Output Shape | Parameters | MACs (Mult-Adds) |
 | :--- | :--- | :--- | :--- |
 | **Conv2d: 1-1** | [1, 64, 112, 112] | 9,408 | 118,013,952 |
