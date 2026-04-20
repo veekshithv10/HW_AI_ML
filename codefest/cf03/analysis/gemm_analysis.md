@@ -1,0 +1,10 @@
+# GEMM Kernel Analysis
+
+## (a) Why the naive kernel is memory-bound
+The naive kernel is severely memory-bound because it performs completely redundant memory fetches. To compute an output value, it constantly re-reads the exact same rows and columns directly from slow global DRAM, resulting in an O(N3) memory access overhead. Our Nsight Compute profiling confirmed this, showing that **80.7%** of all warp stalls were caused by waiting on the instruction queue for global memory operations. This resulted in a very low arithmetic intensity of `~0.74 FLOP/Byte`.
+
+## (b) How tiling reduces DRAM traffic
+Tiling mitigates the global memory wall by utilizing the GPU's fast, on-chip shared memory. By loading an `8x8` block of Matrix A and Matrix B into shared memory, the GPU can reuse those loaded elements 8 times to calculate partial sums before needing to fetch new data. This slashes the total trips to global DRAM. Our profiling proved this: even though the tiled kernel ran **3.4x faster**, its actual global memory bandwidth usage dropped from `23.31 GB/s` to `19.24 GB/s` because it was efficiently working out of the shared memory "pantry."
+
+## (c) Tiled kernel improvements and remaining bottlenecks
+While tiling successfully improved performance from `17.29 GFLOP/s` to `59.58 GFLOP/s`, our Roofline plot shows it is still situated in the memory-bound region. The `8x8` tile improved arithmetic intensity to `~3.1 FLOP/Byte`, but this falls short of the T4's ridge point of `25.3 FLOP/Byte`. To become truly compute-bound, a much larger tile size (e.g., 32x32) is required to further maximize data reuse. Furthermore, the kernel is operating well below the theoretical ceiling. The Nsight profiler revealed that **54.3%** of warp stalls were caused by the MIO queue, indicating our immediate remaining bottleneck is the latency and instruction overhead of accessing the shared memory itself.
