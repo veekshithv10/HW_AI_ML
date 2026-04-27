@@ -6,13 +6,15 @@ module mac (
     output logic signed [31:0] out
 );
 
+    logic signed [15:0] prod;
+    assign prod = a * b;
+
     always_ff @(posedge clk) begin
         if (rst) begin
             out <= 32'sd0;
         end else begin
-            // Explicitly casting the 16-bit product to 32-bit signed 
-            // to ensure proper sign extension during accumulation
-            out <= out + 32'(a * b);
+            // Clean, explicit, sign-preserving cast
+            out <= out + 32'(prod);
         end
     end
 
