@@ -35,9 +35,9 @@ In1 ->|  PE[1][0] |  PE[1][1] | -> (Data shifts right)
 
 ## (b) Cycle-by-Cycle Trace Table
 
-Matrix Multiplication: $C = A \times B$
-* **A** = [[1, 2], [3, 4]]
-* **B** = [[5, 6], [7, 8]]
+Matrix Multiplication: C = A * B
+* A = [[1, 2], [3, 4]]
+* B = [[5, 6], [7, 8]]
 
 **Input Skew:** Row 0 receives column 0 of A (1, then 3). Row 1 receives column 1 of A (2, then 4) delayed by 1 cycle. To model the pipeline registers between processing elements, input data propagates horizontally, shifting from PE[i][0] to PE[i][1] with a one-cycle delay.
 
