@@ -1,0 +1,5 @@
+Master initiating AXI-Stream transaction...
+========================================
+PASS: Interface correctly unpacked AXI data
+========================================
+tb/tb_interface.sv:58: $finish called at 51000 (1ps)

@@ -1,0 +1,6 @@
+VCD info: dumpfile compute_core_waves.vcd opened for output.
+Starting 3x3 Convolution Test...
+========================================
+PASS: Hardware output (90) matches expected (90)
+========================================
+tb/tb_compute_core.sv:97: $finish called at 141000 (1ps)
