@@ -29,6 +29,7 @@ In1 ->|  PE[1][0] |  PE[1][1] | -> (Data shifts right)
               v           v
            C[0][0]     C[0][1]
            C[1][0]     C[1][1]
+
    (Outputs emerge at different cycles:
     C[0][0] at cycle 2, C[1][0] at cycle 3, etc.)
 
