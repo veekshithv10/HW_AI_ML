@@ -1,6 +1,7 @@
 # CMAN: Systolic Array Trace (Weight-Stationary)
 
 ## (a) 2x2 Processing Element (PE) Diagram
+
 In this weight-stationary dataflow, weights from Matrix B are pre-loaded into the processing elements and stay fixed. Matrix A inputs stream in from the left, and partial sums accumulate downward.
 
 **Pre-loaded Weights from Matrix B:**
