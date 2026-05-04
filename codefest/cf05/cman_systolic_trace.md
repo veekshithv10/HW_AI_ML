@@ -12,6 +12,7 @@ In this weight-stationary dataflow, weights from Matrix B are pre-loaded into th
 
 **Array Diagram:**
 
+```text
           [Input A columns]
               |       |
               v       v
