@@ -12,6 +12,7 @@ In this weight-stationary dataflow, weights from Matrix B are pre-loaded into th
 
 **Array Diagram:**
 
+```text
           [Input A columns]
               |       |
               v       v
@@ -32,6 +33,7 @@ In1 ->|  PE[1][0] |  PE[1][1] | -> (Data shifts right)
 
    (Outputs emerge at different cycles:
     C[0][0] at cycle 2, C[1][0] at cycle 3, etc.)
+```
 
 ## (b) Cycle-by-Cycle Trace Table
 
