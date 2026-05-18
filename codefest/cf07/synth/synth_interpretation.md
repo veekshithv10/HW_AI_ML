@@ -1,0 +1,9 @@
+# Synthesis Interpretation - Compute Core (Option A)
+
+The synthesized MAC compute core utilizes a total of 555 logic cells, occupying a physical footprint of 6,198.44 µm². The design architecture is heavily dominated by the combinational logic required for the 8-bit multiplication and 16-bit addition operations. The top three most utilized logic cells are: `xnor2_2` (71 instances) serving as the foundational arithmetic logic; `nor2_2` (60 instances); and `dfrtp_1` (37 instances), which are the standard D-flip-flops acting as the sequential memory elements for the 16-bit accumulator.
+
+The design targeted a strict 10.0 ns (100 MHz) clock period. Post-routing Static Timing Analysis (STA) reported a Setup Slack (Worst Negative Slack, or WNS) of -0.1509 ns on the extreme Slow-Slow (`max_ss_100C_1v60`) corner. Because this slack is negative, the design technically fails timing closure at 100MHz under worst-case conditions.
+
+By analyzing the STA reports, we isolated the critical path causing this failure. The path originates at the `weight_in[0]` input port, travels directly through the heavy combinational logic clouds (the unpipelined MAC multiplier array), and terminates at the `_1056_` D-flip-flop register endpoint. The signal requires approximately 10.15 ns to complete this logic journey, overshooting the 10.0 ns boundary.
+
+The OpenLane 2 flow completed with 0 fatal errors but generated expected warnings. The most critical warning was `[Checker.SetupViolations] Setup violations found in the following corners: max_ss_100C_1v60`, which exactly correlates with the -0.1509 ns slack bottleneck.

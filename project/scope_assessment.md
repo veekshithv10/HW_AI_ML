@@ -1,0 +1,2 @@
+**Update post-Codefest 07:**
+Synthesis via OpenLane 2 confirmed that my MAC core logic is viable, but it requires either a slight clock speed reduction (~90MHz) or an additional pipeline stage to resolve a minor 0.15ns setup violation on the critical path. Because this timing fix is straightforward, the overall project scope remains completely on track and achievable.
