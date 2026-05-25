@@ -1,0 +1,11 @@
+{
+    "DESIGN_NAME": "top",
+    "VERILOG_FILES": [
+        "compute_core.sv",
+        "interface.sv",
+        "top.sv"
+    ],
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 12.0,
+    "PDK": "sky130A"
+}

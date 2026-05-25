@@ -1,0 +1,11 @@
+Power Estimation Status: Not Generated
+
+The automated OpenLane 2 "Classic" flow did not output a power consumption 
+report (power.rpt) for this specific design run. Static power analysis 
+requires gate-level switching activity (VCD/SAIF) and parasitic extraction (SPEF) 
+data which was not configured for this synthesis iteration.
+
+Plan for M4:
+Power analysis will be manually triggered in M4 by invoking the OpenROAD 
+'report_power' command on the final routed database, utilizing the generated 
+SPEF files to provide accurate switching activity estimates.

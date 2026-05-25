@@ -1,0 +1,6 @@
+VCD info: dumpfile cosim_waves.vcd opened for output.
+Starting End-to-End 3x3 Convolution Test...
+========================================
+PASS: Hardware output (90) matches expected (90)
+========================================
+../tb/tb_top.sv:100: $finish called at 166000 (1ps)

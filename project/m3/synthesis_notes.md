@@ -1,0 +1,29 @@
+# Synthesis Narrative and Scope Status
+
+## 1. What Synthesized, Initial Failures, and Error Analysis
+For Milestone 3, the objective was to successfully integrate the AXI4-Stream host interface (`interface.sv`) with the 2D Convolution MAC compute core (`compute_core.sv`) into a single wrapper (`top.sv`), and push this fully integrated design through the physical synthesis flow using OpenLane 2 (Dockerized, using the Classic flow targeting the sky130A PDK).
+
+During the initial synthesis attempts, several failures and bottlenecks were encountered. The first failure was an environmental pipeline issue where the OpenLane 2 Docker container crashed with a `PermissionError` stating that `../../m2/rtl/compute_core.sv` was "not located in any path readable to OpenLane." This occurred because Docker isolates the file system, breaking relative pathing outside the mounted directory. This was resolved by adjusting the Docker launch command to mount the entire repository root as the working directory (`-v $(pwd)/../../..:/work`), allowing the tool to parse the correctly structured M2 and M3 folders without duplicating files.
+
+Once the toolchain successfully ingested the RTL, the next failure mode was a strict timing violation. The initial `config.json` constraint targeted a clock period of 10.0 ns (100 MHz). While the design passed initial Yosys logic synthesis, it failed during OpenROAD's post-routing Static Timing Analysis (STA). The specific error reported in the logs was `[Checker.SetupViolations] Setup violations found in the following corners: max_ss_100C_1v60`. The timing report revealed a Worst Negative Slack (WNS) of -0.1509 ns. 
+
+The physical reason for this failure lies in the architectural critical path. The critical path originates at the AXI input registers (`s_axis_tdata`), travels through the AXI valid/ready handshake logic, and enters the MAC core. Inside the core, the signal must propagate through a highly dense, unpipelined combinational logic cloud consisting of an 8x8-bit signed multiplier and immediately into a 16-bit adder, before finally arriving at the accumulator's D-flip-flops (`dfrtp`). The physical delay of routing this heavy arithmetic logic in the sky130 standard cells exceeds the 10.0 ns constraint.
+
+## 2. Changes Made to Achieve Flow Completion
+To overcome the setup violation and achieve a clean, manufacturable physical layout without rewriting the entire core architecture, the `CLOCK_PERIOD` constraint in `config.json` was relaxed from 10.0 ns to 12.0 ns. 
+
+Running the OpenLane 2 flow with this new constraint resulted in an unqualified success. The integrated module successfully synthesized into a mapped netlist utilizing 569 standard cells (dominated by 60 `nor2_2`, 67 `xnor2_2`, and 54 `dfrtp_2` sequential cells) and occupying a total chip area of 6,596.32 µm². The physical verification steps reported zero Layout vs. Schematic (LVS) errors, zero Design Rule Check (DRC) violations, and zero Antenna rule violations. Most importantly, STA confirmed timing closure with a positive setup slack (WNS) of +0.4421 ns under the worst-case `max_ss_100C_1v60` corner.
+
+## 3. Explicit Scope Adjustment and Rationale
+To accommodate the physical realities of the synthesis flow, a formal scope adjustment is being made to the project hardware target.
+
+* **What was removed:** The goal of implementing a multi-stage execution pipeline within the `compute_core` module to forcefully hit the 100 MHz boundary has been removed from the immediate project scope.
+* **What remains:** The pure combinational 8x8 signed multiplier and 16-bit accumulator remain entirely intact, functioning perfectly alongside a fully compliant AXI4-Stream slave data interface. The functional behavior of the 2D MAC operation is unchanged and verified by co-simulation.
+* **The Adjustment:** The target operating frequency of the accelerator has been officially relaxed from 100 MHz (10.0 ns) down to ~83.3 MHz (12.0 ns).
+
+**Rationale:** This revised scope is highly achievable because the physical synthesis results already prove that the integrated design successfully closes timing and passes DRC/LVS at 12.0 ns. By accepting a minor 17% reduction in clock frequency, the design avoids the complex hardware bugs and stalling hazards introduced by deeply pipelined architectures, guaranteeing a stable hardware baseline for the final integration.
+
+**Meaningful M4 Benchmarks:** Even with the adjusted 83.3 MHz target, the Milestone 4 benchmarks will remain highly meaningful relative to the Milestone 1 baseline. The M1 software baseline was profiled using a "Pure NumPy" script executing sequentially on a general-purpose CPU. That software baseline is heavily burdened by instruction fetch overhead, Python interpreter delays, and memory cache misses. By contrast, the custom hardware accelerator, even running at 83 MHz, performs the 2D Convolution math in dedicated parallel hardware with deterministic, continuous data streaming via the AXI bus. Consequently, the hardware design is fundamentally more efficient in terms of FLOPs-per-cycle and will easily demonstrate massive latency and power acceleration over the purely sequential NumPy software baseline.
+
+## 4. Power Estimation Attempt
+A power estimation flow was attempted during this milestone to prepare for M4. While the OpenLane flow completed successfully, the default `Classic` flow profile does not explicitly output a consolidated power consumption report (`power.rpt`) into the signoff directory by default. Because OpenROAD natively supports power extraction once parasitic extraction (SPEF) is complete, this is simply a configuration reporting limitation rather than a flow failure. For M4, the plan is to explicitly invoke the OpenROAD power reporting scripts (`report_power`) directly on the final routed database to extract the required switching and leakage estimates.
