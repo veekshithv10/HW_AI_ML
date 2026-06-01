@@ -1,0 +1,5 @@
+# Roofline Placement and Uncertainty Analysis
+
+Because an end-to-end integration simulation is not yet runnable following the physical synthesis scope adjustment, the accelerator's position on the roofline represents a projected peak performance of 0.166 GOPS at an arithmetic intensity of 1.0 Ops/byte. 
+
+The dominant uncertainty in this projection stems from the idealistic assumption of a 100% duty cycle on the AXI4-Stream interface. In a physical deployment, host-side DMA setup latency, operating system context switches, and cache misses would create significant bubble cycles where the slave interface blocks while waiting for data. To convert this mathematical projection into an empirical measurement, a full cycle-accurate testbench must be executed in Verilator or cocotb using an AXI Verification IP model. This will accurately capture the handshaking delays and verify structural timing compliance under realistic system workloads.
