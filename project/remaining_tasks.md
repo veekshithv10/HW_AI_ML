@@ -1,0 +1,5 @@
+# Milestone 4 Remaining Architecture Tasks
+
+1. **Parallelize Compute Core Logic Clouds:** Modify `compute_core.sv` to instantiate a parallel array of 8 MAC elements. Unrolling this spatial dimension will scale the flat compute roofline ceiling from 0.166 GOPS to 1.33 GOPS, allowing the system to fully utilize the available interface processing windows.
+2. **Integrate On-Chip Weight Caching Registers:** Implement a dedicated internal register array inside `top.sv` to buffer the 72 weight parameters of the 3x3 filter channels during initial configuration. This architecture decouples streaming pixel operations from off-chip weight fetching, shifting the system runtime operational point toward the 8.15 Ops/byte upper roofline bound.
+3. **Resolve Critical Path Timing Slack via Post-Routing Pipelining:** Add a structural pipeline register stage directly at the boundary of the unpipelined 8x8 signed multipliers and the 16-bit accumulation adders. Isolating this high-density combinational logic will drive timing closure margins down below 10.0 ns, restoring the original 100 MHz target synthesis boundary.
