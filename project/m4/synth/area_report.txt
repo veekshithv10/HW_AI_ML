@@ -1,0 +1,43 @@
+================================================================================
+ AREA REPORT  —  M4 (pipelined)  —  OpenLane 2 / sky130A (Yosys synth stat)
+================================================================================
+Total chip area (module 'top') : 51146.5536 um^2
+  of which sequential elements : 11902.6656 um^2  (23.27%)
+Number of cells                : 4432
+Number of wires                : 4421
+Number of public wires         : 443
+Number of ports                : 7  (93 port bits)
+
+Dominant area contributor: combinational arithmetic (nine 8x8 signed multipliers +
+pipelined adder tree). The cell mix is dominated by XNOR/XOR (product & carry logic)
+and dfrtp flip-flops (pipeline + accumulator registers).
+
+--------------------------------------------------------------------------------
+ Cell count by type (selected — dominant contributors first)
+--------------------------------------------------------------------------------
+  xnor2_2   509     <- multiplier product / carry-save logic
+  xor2_2    268     <- multiplier / adder-tree sum logic
+  dfrtp_2   453     <- pipeline + accumulator flip-flops (was 54 in M3 serial)
+  nand2_2   416
+  nor2_2    335
+  or2_2     208
+  and2_2    182
+  a21o_2    172
+  a21oi_2   165
+  and3_2    152
+  o21ai_2   112
+  and2b_2   110
+  o21a_2    106
+  inv_2      95
+  mux2_1     91
+  nand2b_2   89
+  nand3_2    88
+  a22o_2     78
+  or3_2      76
+  a22oi_2    69
+  a21bo_2    60
+  ... (full list in openlane_run.log)
+--------------------------------------------------------------------------------
+For comparison, M3 (serial MAC): 6596.32 um^2, 569 cells, 54 dfrtp.
+The 7.8x cell/area growth M3->M4 is the cost of 9-wide parallelism + 3-stage pipelining.
+================================================================================

@@ -1,0 +1,8 @@
+VCD info: dumpfile final_waveform.vcd opened for output.
+=== Starting MAC Verification ===
+--- Test 1: All-ones weights (adder tree check) ---
+  PASS [ALL_ONES]: got 450, expected 450
+--- Test 2: Mixed signed weights (multiplier check) ---
+  PASS [SIGNED_MIX]: got 150, expected 150
+=== ALL TESTS PASSED ===
+tb/tb_top.sv:164: $finish called at 498000 (1ps)

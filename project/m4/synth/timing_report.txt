@@ -1,0 +1,35 @@
+================================================================================
+ TIMING REPORT  —  M4 (pipelined)  —  OpenLane 2 / sky130A
+================================================================================
+Clock port      : clk
+Clock period    : 12.0 ns  ==> design CLOSES at 83.3 MHz
+Result          : CLEAN. Zero setup, hold, max-slew, max-cap violations, all 9 corners.
+
+Worst setup slack (WNS) : +1.6190 ns   @ max_ss_100C_1v60  (worst corner)
+Worst hold slack        : +0.1450 ns   @ min_ff_n40C_1v95
+Setup violation count   : 0  (all corners)
+Hold violation count    : 0  (all corners)
+Max-cap violation count : 0  (all corners)
+Max-slew violation count: 0  (all corners)
+
+Note: +1.62 ns of setup slack remains at the worst-case corner, implying ~96 MHz of
+frequency headroom before the worst corner would violate.
+
+--------------------------------------------------------------------------------
+ Per-corner STA summary (OpenROAD post-route)
+--------------------------------------------------------------------------------
+Corner/Group        Hold WNS   Setup WNS   Setup TNS   SetupVio   MaxCap   MaxSlew
+Overall              0.1450     1.6190      0.0000        0          0        0
+nom_tt_025C_1v80     0.3841     4.7576      0.0000        0          0        0
+nom_ss_100C_1v60     0.7880     1.6996      0.0000        0          0        0
+nom_ff_n40C_1v95     0.1503     5.5053      0.0000        0          0        0
+min_tt_025C_1v80     0.3764     4.8206      0.0000        0          0        0
+min_ss_100C_1v60     0.8283     1.7675      0.0000        0          0        0
+min_ff_n40C_1v95     0.1450     5.5475      0.0000        0          0        0
+max_tt_025C_1v80     0.3952     4.7002      0.0000        0          0        0
+max_ss_100C_1v60     0.7441     1.6190      0.0000        0          0        0   <- worst setup
+max_ff_n40C_1v95     0.1578     5.4670      0.0000        0          0        0
+
+Critical path: register-to-register through the pipelined adder tree (no AXI-input-to-MAC
+combinational path remains after pipelining). All values in nanoseconds.
+================================================================================

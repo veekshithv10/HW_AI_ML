@@ -1,0 +1,20 @@
+{
+    "DESIGN_NAME": "top",
+    "VERILOG_FILES": [
+        "dir::../rtl/interface.sv",
+        "dir::../rtl/compute_core.sv",
+        "dir::../rtl/top.sv"
+    ],
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 12.0,
+    "PDK": "sky130A",
+    "MAX_FANOUT_CONSTRAINT": 8,
+    "FP_CORE_UTIL": 42,
+    "PL_TARGET_DENSITY_PCT": 55,
+    "MAX_TRANSITION_CONSTRAINT": 0.75,
+    "RUN_ANTENNA_REPAIR": true,
+    "GRT_ANTENNA_ITERS": 5,
+    "GRT_ANTENNA_MARGIN": 15,
+    "DESIGN_REPAIR_MAX_WIRE_LENGTH": 75,
+    "RUN_HEURISTIC_DIODE_INSERTION": true
+}

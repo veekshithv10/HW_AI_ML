@@ -1,0 +1,41 @@
+metric,value,unit,source/notes
+workload_ops_per_batch,1179648,ops,2*N*Cin*k^2*Hout*Wout*Cout = 2*32*1*9*16*16*8
+output_pixels_per_batch,65536,pixels,32*8*16*16
+sw_baseline_throughput,0.280,GOPS,cProfile cnn.py:128 ; 1179648 ops / 4.22 ms
+sw_baseline_time_per_batch,4.22,ms,cProfile cumulative per-call (3.208 s / 760 calls)
+sw_arithmetic_intensity,1.058,FLOP/byte,1179648 FLOPs / 1114688 bytes (FP64)
+sw_platform,Intel i5-8265U,,FP64 pure NumPy
+cpu_peak_compute,102.4,GFLOP/s,M1 roofline
+cpu_peak_bandwidth,37.5,GB/s,M1 roofline
+cpu_ridge_point,2.73,FLOP/byte,102.4/37.5
+m3_throughput,0.166,GOPS,2 ops/cycle * 83.3 MHz (serial MAC)
+m3_frequency,83.3,MHz,12 ns clock period
+m3_time_per_batch,7.10,ms,1179648 ops / 0.166 GOPS
+m3_area,6596,um^2,OpenLane synth stat
+m3_power_nom_tt,2.64,mW,report_power nom_tt_025C_1v80
+m3_cells,569,cells,OpenLane synth stat
+m3_energy_efficiency,62.9,GOPS/W,0.166 / 0.00264
+m4_throughput,1.5,GOPS,18 ops/cycle * 83.3 MHz (9 parallel MACs)
+m4_frequency,83.3,MHz,12 ns clock period
+m4_time_per_batch,0.786,ms,65536 cycles / 83.3 MHz
+m4_arithmetic_intensity,8.47,FLOP/byte,1.058 * 8 (INT8 = 1 byte vs FP64 8 bytes)
+m4_axi_bandwidth,0.75,GB/s,9 bytes/cycle * 83.3 MHz (72-bit bus)
+m4_area,51147,um^2,OpenLane synth stat (51146.55)
+m4_power_nom_tt,21.6,mW,report_power nom_tt_025C_1v80 (0.02162863 W)
+m4_power_combinational,17.80,mW,82.3% of total
+m4_power_sequential,2.24,mW,10.3% of total
+m4_power_clock,1.60,mW,7.4% of total
+m4_cells,4432,cells,OpenLane synth stat
+m4_flipflops,453,cells,dfrtp_2 count
+m4_energy_efficiency,69.3,GOPS/W,1.5 / 0.0216
+m4_setup_slack_worst,1.62,ns,max_ss_100C_1v60 corner
+m4_signoff,clean,,setup/hold/slew/cap/antenna/DRC/LVS pass all 9 corners
+speedup_m4_vs_sw_time,5.4,x,4.22 ms / 0.786 ms
+speedup_m4_vs_sw_throughput,5.4,x,1.5 / 0.280
+speedup_m4_vs_m3,9.0,x,1.5 / 0.166
+m4_energy_per_batch,17,uJ,21.6 mW * 0.786 ms
+sw_energy_per_batch,63,mJ,15 W (TDP assumption) * 4.22 ms
+energy_reduction,3700,x,order-of-magnitude; sensitive to CPU power assumption
+quant_mae,0.004226,,M2: 100 randomized 3x3 convolutions vs FP reference
+quant_max_error,0.013897,,M2 (1.4%)
+quant_scale_factor,127,,symmetric INT8 quantization
